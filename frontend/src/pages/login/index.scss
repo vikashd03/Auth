@@ -1,0 +1,84 @@
+.login-page-container {
+  height: 100vh;
+
+  .login-widget-container {
+    position: fixed;
+    top: 100px;
+    height: 500px;
+    width: 400px;
+    border-radius: 25px;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .title {
+      margin-top: 50px;
+      font-size: 50px;
+    }
+
+    .error-container {
+      height: 20px;
+      font-size: 14px;
+      color: rgb(216, 4, 4);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      margin-top: 50px;
+
+      .login-form-input {
+        height: 40px;
+        width: 300px;
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 4px 15px;
+      }
+
+      .login-submit {
+        margin-top: 40px;
+        width: 200px;
+        height: 35px;
+        background-color: #1853c8;
+        border: 1px solid black;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 16px;
+
+        &:hover {
+          background-color: #2767dc;
+        }
+
+        &.loading {
+          color: black;
+          pointer-events: none;
+          background: linear-gradient(
+            to right,
+            #dcdfe5 20%,
+            #83a2db 50%,
+            #b8c6df 80%
+          );
+          animation: animate-gradient 1.5s ease-in-out infinite;
+          background-size: 200% 100%;
+        }
+      }
+    }
+
+    .register-wrapper {
+      margin-top: 5px;
+      font-size: 15px;
+
+      .register-btn {
+        border: none;
+        background: none;
+        text-decoration: underline;
+        cursor: pointer;
+        color: blue;
+      }
+    }
+  }
+}

@@ -1,10 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/home";
 import { pubsub } from "./utils/PubSub";
-import useNavigateWithState from "./hooks/useNavigateWithState";
-import Profile from "./pages/profile";
-import "./index.scss";
 import { pubsubTopic } from "./utils/constants";
+import useNavigateWithState from "./hooks/useNavigateWithState";
+import Home from "./pages/home";
+import Profile from "./pages/profile";
+import Chat from "./pages/chat";
+import "./index.scss";
 
 const Layout = () => {
   const navigate = useNavigateWithState();
@@ -15,22 +16,23 @@ const Layout = () => {
       <Routes>
         <Route path="home" Component={Home} />
         <Route path="profile" Component={Profile} />
+        <Route path="chat" Component={Chat} />
         <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>
       <div className="layout-btns">
         <button
           onClick={() => {
-            pubsub.publish(pubsubTopic.AUTH_LOGOUT, "logout");
+            navigate("/home");
           }}
         >
-          Logout
+          Home
         </button>
         <button
           onClick={() => {
-            navigate("/login");
+            navigate("/chat");
           }}
         >
-          Login
+          Chat
         </button>
         <button
           onClick={() => {
@@ -41,10 +43,10 @@ const Layout = () => {
         </button>
         <button
           onClick={() => {
-            navigate("/home");
+            pubsub.publish(pubsubTopic.AUTH_LOGOUT, "logout");
           }}
         >
-          Home
+          Logout
         </button>
       </div>
     </div>

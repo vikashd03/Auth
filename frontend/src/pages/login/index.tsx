@@ -16,8 +16,8 @@ type UserDetails = {
 const Login = ({ handleSession }: any) => {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState<UserDetails>({
-    email: "vikash1@gmail.com",
-    password: "vikash@123",
+    email: "",
+    password: "",
   });
   const [login, { isLoading, isError, error }] = useLoginMutation();
   const [errMsg, setErrMsg] = useState("");

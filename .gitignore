@@ -12,7 +12,8 @@ node_modules/
 *.gz
 gunicorn.pid
 static/
-env/*
+env/
 .env
 temp.ts
 *.pem
+versions

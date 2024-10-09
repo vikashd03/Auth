@@ -4,10 +4,10 @@ import { RootState } from "../store";
 import { MutationActionCreatorResult, MutationDefinition, QueryArgFrom } from "@reduxjs/toolkit/query";
 import { pubsub } from "../../utils/PubSub";
 import { pubsubTopic } from "../../utils/constants";
-import { UNPROTECTED_ENPOINTS } from "../../utils/config";
+import { BASE_URI, UNPROTECTED_ENPOINTS } from "../../utils/config";
 
 const API_REQUEST_TIMEOUT = 90000;
-export const BASE_URL = "https://localhost:8000/api/";
+export const BASE_URL = BASE_URI + "api/";
 export const commonTransformResponse = (data: any, meta: any) => ({ data, meta });
 
 // const axiosInstance = axios.create({

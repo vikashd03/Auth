@@ -1,6 +1,8 @@
 # Auth
 Base Authentication for Projects
 
+Started Migration of Backend to FastAPI from Django
+
 # Teck stack
 1. React
 2. Redux toolkit

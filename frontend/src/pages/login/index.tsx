@@ -36,6 +36,10 @@ const Login = ({ handleSession }: any) => {
   };
 
   const handleLogin = async () => {
+    if (!userDetails.email || !userDetails.password) {
+      setErrMsg("Email or Password is InValid");
+      return;
+    }
     try {
       const res = await login({ ...userDetails }).unwrap();
       if (res?.meta?.response?.status === 200) {

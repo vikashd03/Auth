@@ -1,12 +1,13 @@
 import time
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+
 from apps.auth.main import app as auth_app
-from internal.utils import register_validation_exception_handler
+from internal.utils import register_exception_handlers
 
 app = FastAPI()
 
-register_validation_exception_handler(app)
+register_exception_handlers(app)
 
 app.mount("/auth", auth_app)
 

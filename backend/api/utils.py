@@ -11,9 +11,9 @@ from .db import UserTable
 from .config import (
     ACCESS_TOKEN_EXPIRY_TIME,
     ACCESS_TOKEN_SECRET_KEY,
-    ALGORITHM,
+    JWT_ALGORITHM,
     GENERAL_API_ERROR_RESPONSE,
-    REFRESH__TOKEN_SECRET_KEY,
+    REFRESH_TOKEN_SECRET_KEY,
     REFRESH_TOKEN_EXPIRY_TIME,
 )
 
@@ -37,7 +37,7 @@ def get_password_hash(password):
 def create_token(data: dict, token_type: str = "access"):
     payload = data.copy()
     secret = (
-        ACCESS_TOKEN_SECRET_KEY if token_type == "access" else REFRESH__TOKEN_SECRET_KEY
+        ACCESS_TOKEN_SECRET_KEY if token_type == "access" else REFRESH_TOKEN_SECRET_KEY
     )
     expiry_time = int(
         datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
@@ -47,19 +47,19 @@ def create_token(data: dict, token_type: str = "access"):
         else REFRESH_TOKEN_EXPIRY_TIME
     )
     payload.update({"expiryAt": expiry_time})
-    encoded_jwt = jwt.encode(payload, secret, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
     return encoded_jwt
 
 
 @handle_error()
 def decode_token(token: str, token_type: str = "access") -> Optional[dict]:
     secret = (
-        ACCESS_TOKEN_SECRET_KEY if token_type == "access" else REFRESH__TOKEN_SECRET_KEY
+        ACCESS_TOKEN_SECRET_KEY if token_type == "access" else REFRESH_TOKEN_SECRET_KEY
     )
     decoded = jwt.decode(
         token,
         secret,
-        algorithms=[ALGORITHM],
+        algorithms=[JWT_ALGORITHM],
     )
     return decoded
 

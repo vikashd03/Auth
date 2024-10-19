@@ -85,6 +85,7 @@ const Login = ({ handleSession }: any) => {
             disabled={isLoading}
           />
           <input
+          style={{fontWeight: 8}}
             id="password-input"
             value={userDetails.password}
             className="login-form-input"

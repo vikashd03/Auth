@@ -1,4 +1,4 @@
-export const BASE_URI = "https://localhost:8000/"
+export const BASE_URI = "http://localhost:8090/"
 
 export const UNPROTECTED_ROUTES = ["/login", "/register", "/logout"]
 

@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
-import typing
 from fastapi import HTTPException, status
+from fastapi.datastructures import Headers
 import jwt
 from passlib.context import CryptContext
 
@@ -67,28 +67,28 @@ def decode_token(token: str, token_type: TOKEN_TYPE) -> Optional[dict]:
 
 
 def user_authenticated(
-    headers: Optional[typing.Mapping[str, str]],
+    headers: Headers,
     token_type: TOKEN_TYPE,
-    token: str,
+    token: str = '',
 ) -> Optional[UserModel]:
     if token_type == TOKEN_TYPE.ACCESS and (
-        "Authorization" not in headers.keys()
-        or headers["Authorization"].split(" ")[0] != "Bearer"
-        or not headers["Authorization"].split(" ")[1]
+        "authorization" not in headers.keys()
+        or headers["authorization"].split(" ")[0] != "Bearer"
+        or not headers["authorization"].split(" ")[1]
     ):
         raise HTTPException(
             detail="User not Authenticated",
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
     token: str = (
-        headers["Authorization"].split(" ")[1]
+        headers["authorization"].split(" ")[1]
         if token_type == TOKEN_TYPE.ACCESS
         else token
     )
     decoded_token = decode_token(token, token_type)
     if not decoded_token:
         raise HTTPException(
-            detail="User inot Authenticated",
+            detail="User not Authenticated",
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
     user_id, expiryAt = decoded_token["user_id"], decoded_token["expiryAt"]
@@ -96,7 +96,7 @@ def user_authenticated(
     user = Users.get_user_by_id(user_id)
     if not user or expiryAt < current_utc_time:
         raise HTTPException(
-            detail="User inot Authenticated",
+            detail="User not Authenticated",
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
     return user

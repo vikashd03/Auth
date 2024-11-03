@@ -54,3 +54,4 @@ async def broadcast_new_chat(chat: ChatModel):
                     sio.emit(event=SIO_EVENT.NEW_CHAT, data=chat.model_dump(), to=sid)
                 )
     await asyncio.gather(*broadcast_tasks)
+    print("Broadcasted event -", SIO_EVENT.NEW_CHAT, chat.name)

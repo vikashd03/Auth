@@ -24,7 +24,7 @@ async def connect(sid, environ):
     else:
         USER_POOL[user.id] = [sid]
     print(USER_POOL, SESSION_POOL)
-    await sio.emit("connected")
+    await sio.emit(event=SIO_EVENT.CONNECTED, to=sid)
 
 
 @sio.on(SIO_EVENT.DISCONNECT)
@@ -41,7 +41,7 @@ async def disconnect(sid):
 @sio.on("message")
 async def send_message(sid, data):
     print(f"Client {sid} message -", data)
-    await sio.emit("sent")
+    await sio.emit(event="sent", to=sid)
 
 
 async def broadcast_new_chat(chat: ChatModel):

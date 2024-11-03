@@ -12,6 +12,7 @@ ASGI_SCOPE = "asgi.scope"
 class SIO_EVENT(str, Enum):
     CONNECT = "connect"
     DISCONNECT = "disconnect"
+    CONNECTED = "connected"
     NEW_CHAT = "new_chat"
 
 

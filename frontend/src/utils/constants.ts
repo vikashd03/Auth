@@ -5,3 +5,7 @@ export enum cacheKey {
 export enum pubsubTopic {
     AUTH_LOGOUT = "auth-logout",
 } 
+
+export enum API_ENDPOINTS {
+    LOGIN = "login",
+}

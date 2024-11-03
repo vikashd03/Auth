@@ -1,12 +1,11 @@
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-
 try:
     from dotenv import load_dotenv, find_dotenv
 
-    load_dotenv(find_dotenv(str(BASE_DIR / ".env")))
+    PROJECT_BASE_DIR = Path(__file__).parent
+    load_dotenv(find_dotenv(str(PROJECT_BASE_DIR / ".env")))
 except ImportError:
     print("not able to import .env")
     exit()
@@ -28,3 +27,20 @@ REFRESH_TOKEN_EXPIRY_TIME = os.environ.get("REFRESH_TOKEN_EXPIRY_TIME", 10000)
 GENERAL_API_ERROR_RESPONSE = "Something went wrong"
 
 BASE_ROUTE = "/api"
+
+BASE_DIR = str(Path(__file__).resolve().parent)
+
+UNPROTECTED_ROUTES = [
+    "auth/signup/",
+    "auth/signin/",
+    "auth/refresh/token/",
+    "auth/logout/",
+]
+
+ALLOWED_ORIGINS = ["http://localhost:5173"]
+
+PROFILE_IMAGE_UPLOAD_DIR = os.environ.get(
+    "PROFILE_IMAGE_UPLOAD_DIR", "data/profile-images"
+)
+
+PROFILE_IMAGE_FILE_TYPES = ["image/jpeg", "image/png"]

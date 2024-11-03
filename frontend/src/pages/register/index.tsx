@@ -18,9 +18,9 @@ type UserDetails = {
 const Register = ({ handleSession }: any) => {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState<UserDetails>({
-    name: "Vikash",
-    email: "vikash@gmail.com",
-    password: "vikash@123",
+    name: "",
+    email: "",
+    password: "",
   });
   const [register, { isLoading, isError, error }] = useRegisterMutation();
   const [errMsg, setErrMsg] = useState("");

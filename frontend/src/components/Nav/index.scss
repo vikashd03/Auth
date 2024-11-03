@@ -1,0 +1,86 @@
+.nav-wrapper {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  margin: 0 20px;
+  border: 1px solid black;
+  border-radius: 0 0 25px 25px;
+  border-top: none;
+  background-color: rgb(237, 237, 237);
+
+  .nav-title {
+    font-size: 16px;
+  }
+
+  .nav-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+
+      .nav-link {
+        border: none;
+        background-color: rgb(193, 193, 255);
+        padding: 3px 6px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    }
+
+    .nav-options {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+      gap: 10px;
+      position: relative;
+
+      .profile-btn {
+        border: 1px solid black;
+        padding: 4px 8px;
+        border-radius: 5px;
+        background-color: white;
+        cursor: pointer;
+      }
+
+      .profile-dropdown {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        top: 32px;
+        right: 0;
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: white;
+        padding: 8px 10px;
+        width: 120px;
+        gap: 10px;
+        justify-content: center;
+        align-items: start;
+
+        .profile-dropdown-item {
+          font-size: 15px;
+          cursor: pointer;
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          gap: 7px;
+          border-bottom: 1px solid black;
+          padding-bottom: 2px;
+          width: 90%;
+
+          button {
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+}

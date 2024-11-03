@@ -1,11 +1,12 @@
 import datetime
 from typing import Optional
-from fastapi import HTTPException, status
-from fastapi.datastructures import Headers
+from fastapi import HTTPException, WebSocketException, status
 import jwt
 from passlib.context import CryptContext
+from enum import Enum
 
-from .models import UserModel, Users
+from .schemas import AccessTokenPayload, RefreshTokenPayload, UserModel
+from .crud import Users
 from config import (
     ACCESS_TOKEN_EXPIRY_TIME,
     ACCESS_TOKEN_SECRET_KEY,
@@ -21,9 +22,14 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 
-class TOKEN_TYPE:
+class TOKEN_TYPE(str, Enum):
     REFRESH = "refresh"
     ACCESS = "access"
+
+
+class REQUEST_TYPE(str, Enum):
+    HTTP = "http"
+    WEBSOCKET = "websocket"
 
 
 def create_token(data: dict, token_type: TOKEN_TYPE):
@@ -48,11 +54,13 @@ def create_token(data: dict, token_type: TOKEN_TYPE):
 def verify_password(plain_password, hashed_password):
     if not hashed_password or not pwd_context.verify(plain_password, hashed_password):
         raise HTTPException(
-            msg="Invalid Credentials", status=status.HTTP_401_UNAUTHORIZED
+            detail="Invalid Credentials", status_code=status.HTTP_401_UNAUTHORIZED
         )
 
 
-def decode_token(token: str, token_type: TOKEN_TYPE) -> Optional[dict]:
+def decode_token(
+    token: str, token_type: TOKEN_TYPE
+) -> Optional[AccessTokenPayload | RefreshTokenPayload]:
     secret = (
         ACCESS_TOKEN_SECRET_KEY
         if token_type == TOKEN_TYPE.ACCESS
@@ -66,37 +74,42 @@ def decode_token(token: str, token_type: TOKEN_TYPE) -> Optional[dict]:
         return None
 
 
-def user_authenticated(
-    headers: Headers,
-    token_type: TOKEN_TYPE,
-    token: str = '',
-) -> Optional[UserModel]:
-    if token_type == TOKEN_TYPE.ACCESS and (
-        "authorization" not in headers.keys()
-        or headers["authorization"].split(" ")[0] != "Bearer"
-        or not headers["authorization"].split(" ")[1]
-    ):
+def raise_not_authenticated(request_type: REQUEST_TYPE):
+    if request_type == REQUEST_TYPE.HTTP:
         raise HTTPException(
             detail="User not Authenticated",
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
-    token: str = (
-        headers["authorization"].split(" ")[1]
+    elif request_type == REQUEST_TYPE.WEBSOCKET:
+        raise WebSocketException(
+            reason="User not Authenticated",
+            code=status.WS_1008_POLICY_VIOLATION,
+        )
+
+
+def user_authenticated(
+    data: dict[str, str],
+    token_type: TOKEN_TYPE,
+    request_type: REQUEST_TYPE = REQUEST_TYPE.HTTP,
+    token: str = "",
+) -> Optional[UserModel]:
+    if token_type == TOKEN_TYPE.ACCESS and (
+        "authorization" not in data.keys()
+        or not data["authorization"].startswith("Bearer ")
+        or not data["authorization"].removeprefix("Bearer ")
+    ):
+        raise_not_authenticated(request_type)
+    token = (
+        data["authorization"].removeprefix("Bearer ")
         if token_type == TOKEN_TYPE.ACCESS
         else token
     )
     decoded_token = decode_token(token, token_type)
     if not decoded_token:
-        raise HTTPException(
-            detail="User not Authenticated",
-            status_code=status.HTTP_401_UNAUTHORIZED,
-        )
+        raise_not_authenticated(request_type)
     user_id, expiryAt = decoded_token["user_id"], decoded_token["expiryAt"]
     current_utc_time = int(datetime.datetime.now(tz=datetime.timezone.utc).timestamp())
     user = Users.get_user_by_id(user_id)
     if not user or expiryAt < current_utc_time:
-        raise HTTPException(
-            detail="User not Authenticated",
-            status_code=status.HTTP_401_UNAUTHORIZED,
-        )
+        raise_not_authenticated(request_type)
     return user

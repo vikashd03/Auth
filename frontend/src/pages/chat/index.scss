@@ -1,0 +1,19 @@
+.chat-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  .chat-page-title {
+    font-size: 40px;
+  }
+  .chat-content-wrapper {
+    display: flex;
+    border: 1px solid black;
+    width: 80%;
+    min-width: 800px;
+    max-width: 1100px;
+    height: 90%;
+    border-radius: 20px;
+  }
+}

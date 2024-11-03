@@ -6,7 +6,10 @@ from sqlalchemy import pool
 from alembic import context
 from config import DATABASE_URI
 from internal.db import Base
+
+# dummy imports for DB Migrations
 from apps.auth.models import User
+from apps.chat.models import Chat, Message, chat_members
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -1,0 +1,67 @@
+.chat-box-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 70%;
+  .profile-section-wrapper {
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    .profile-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .profile-icon {
+        width: 40px;
+        height: 40px;
+      }
+      .profile-name {
+        font-size: 20px;
+      }
+    }
+    .messages-search {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      .messages-search-icon {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+      }
+      .messages-search-input {
+        padding: 4px;
+        border-radius: 5px;
+      }
+    }
+  }
+  .messages-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 5px;
+  }
+  .new-message-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px;
+    gap: 10px;
+    .new-message-input {
+        width: 100%;
+        padding: 10px;
+    }
+    .new-message-btn {
+        .new-message-btn-icon {
+            width: 35px;
+            height: 35px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+    }
+  }
+}

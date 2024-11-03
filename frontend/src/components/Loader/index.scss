@@ -1,0 +1,28 @@
+.loader {
+  display: inline-block;
+  aspect-ratio: 1;
+  --_c: no-repeat radial-gradient(farthest-side, #383838 92%, #0000);
+  background: var(--_c) top, var(--_c) left, var(--_c) right, var(--_c) bottom;
+  animation: spin 1s infinite;
+
+  &.small {
+    width: 20px;
+    background-size: 5px 5px;
+  }
+
+  &.medium {
+    width: 50px;
+    background-size: 10px 10px;
+  }
+
+  &.large {
+    width: 80px;
+    background-size: 15px 15px;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(0.5turn);
+  }
+}

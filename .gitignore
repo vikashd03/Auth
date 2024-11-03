@@ -17,3 +17,4 @@ env/
 temp.ts
 *.pem
 versions
+data/

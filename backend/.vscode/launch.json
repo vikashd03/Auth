@@ -5,21 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: FastAPI",
+            "name": "Python Debugger: Django",
             "type": "debugpy",
             "request": "launch",
-            "module": "uvicorn",
             "args": [
-                "main:app",
-                "--port",
-                "8090",
-                "--reload",
-                "--ssl-certfile",
+                "runserver_plus",
+                "--cert-file",
                 "cert.pem",
-                "--ssl-keyfile",
+                "--key-file",
                 "key.pem",
             ],
-            "jinja": true
+            "django": true,
+            "autoStartBrowser": false,
+            "program": "${workspaceFolder}/manage.py"
         }
     ]
 }

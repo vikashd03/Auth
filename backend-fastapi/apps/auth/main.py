@@ -106,7 +106,7 @@ def refresh_token(request: Request, response: Response):
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="User not Authenticated"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not Authenticated"
         )
     user = user_authenticated(
         data=None, token_type=TOKEN_TYPE.REFRESH, token=refresh_token

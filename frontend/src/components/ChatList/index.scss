@@ -48,7 +48,8 @@
     display: flex;
     flex-direction: column;
     border-top: 1px solid black;
-    overflow-y: scroll;
+    overflow-y: auto;
+    width: 100%;
 
     .chat-list-item {
       width: 100%;

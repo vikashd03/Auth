@@ -61,6 +61,17 @@ export const userApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    uploadProfileImg: builder.mutation({
+      query: ({ file, type, id }: { file: File; type: string; id: number }) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        return {
+          url: `${AUTH_BASE}/profile-image/${type}/${id}`,
+          method: "POST",
+          body: formData,
+        };
+      },
+    }),
   }),
 });
 
@@ -71,4 +82,5 @@ export const {
   useRefreshMutation,
   useGetUsersMutation,
   useGetUserMutation,
+  useUploadProfileImgMutation,
 } = userApi;

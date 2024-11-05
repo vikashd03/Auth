@@ -30,6 +30,7 @@ export interface User {
   name: string;
   email: string;
   active: boolean;
+  img_url: string;
 }
 
 export interface UsersResponse {
@@ -40,10 +41,17 @@ export interface UsersResponse {
   meta: any;
 }
 
+export enum CHAT_TYPE {
+  DIRECT = "direct",
+  GROUP = "group",
+}
+
 export interface Chat {
   id: number;
-  type: string;
+  type: CHAT_TYPE;
   name: string;
+  sender?: User;
+  img_url: string;
 }
 
 export interface ChatsResponse {

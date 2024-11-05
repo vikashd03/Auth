@@ -4,21 +4,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   .new-grp-chat-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
     .new-grp-chat-modal-title {
       font-size: 20px;
       margin: 0 auto;
     }
+
     .new-grp-chat-modal-close-btn {
       cursor: pointer;
       width: 20px;
       height: 20px;
     }
   }
+
   .new-grp-chat-modal-content {
     margin-top: 20px;
     display: flex;
@@ -26,18 +30,65 @@
     justify-content: center;
     align-items: center;
     gap: 15px;
-    .chat-name-input {
-      border: 1px solid black;
-      outline: none;
-      padding: 7px 14px;
-      border-radius: 5px;
-      width: 250px;
+
+    .chat-profile-input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      .chat-profile-img-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .chat-profile-img-placeholder {
+          width: 34px;
+          height: 34px;
+          cursor: pointer;
+          color: rgb(57, 57, 57);
+        }
+
+        .chat-profile-selected-img-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          cursor: pointer;
+
+          .chat-profile-selected-img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50px;
+          }
+
+          .chat-profile-selected-img-edit {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            color: rgb(55, 55, 55);
+          }
+        }
+
+        .chat-profile-img-input {
+          display: none;
+        }
+      }
+
+      .chat-name-input {
+        border: 1px solid black;
+        outline: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        width: 250px;
+      }
     }
+
     .add-members-wrapper {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
       .add-members-search {
         width: 200px;
         padding: 5px 10px;
@@ -45,6 +96,7 @@
         outline: none;
         border-radius: 5px;
       }
+
       .members-added {
         margin-top: 10px;
         display: flex;
@@ -53,6 +105,7 @@
         gap: 5px;
         width: 300px;
         flex-wrap: wrap;
+
         .members-added-item {
           font-size: 13px;
           border: 1px solid black;
@@ -60,6 +113,7 @@
           padding: 4px 8px;
         }
       }
+
       .members-list {
         margin-top: 10px;
         display: flex;
@@ -68,6 +122,7 @@
         gap: 10px;
         max-height: 150px;
         overflow-y: scroll;
+
         .member-list-item {
           width: 300px;
           border: 0.5px solid black;
@@ -77,21 +132,33 @@
           display: flex;
           align-items: center;
           cursor: pointer;
+
+          .member-profile-img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50px;
+          }
+
           .member-profile-icon {
             width: 30px;
             height: 30px;
+            color: rgb(100, 100, 100);
           }
+
           .member-profile-content {
             margin-left: 10px;
             display: flex;
             flex-direction: column;
+
             .member-name {
               font-size: 14px;
             }
+
             .member-email {
               font-size: 12px;
             }
           }
+
           .member-list-checkbox {
             border: 1px solid black;
             width: 15px;
@@ -102,23 +169,27 @@
       }
     }
   }
+
   .create-new-grp-chat-wrapper {
     margin-left: auto;
     margin-top: 20px;
     display: flex;
     gap: 10px;
     align-items: center;
+
     .create-new-grp-chat-error {
       height: 20px;
       font-size: 14px;
       color: rgb(216, 4, 4);
     }
+
     .create-new-grp-chat-btn-laoding {
       width: 110px;
       height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
+
       .create-new-grp-chat-btn {
         border: 1px solid blue;
         border-radius: 5px;

@@ -2,15 +2,40 @@ import { IoSearchSharp } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { HiUserGroup } from "react-icons/hi";
 import "./index.scss";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import NewChatModal from "../NewGrpChatModal";
 import { RootState } from "../../ducks/store";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../../ducks/api/slice";
+import { useGetUsersMutation } from "../../ducks/user/api";
+import { CHAT_TYPE } from "../../types/common";
 
 const ChatList = () => {
   const [newChatModalOpen, setNewChatModalOpen] = useState(false);
+  const [chatListSearch, setChatListSearch] = useState("");
+  const [getUsers, { data: usersData, isLoading: usersIsLoading }] =
+    useGetUsersMutation();
   const chat = useSelector((state: RootState) => state.chat);
   const { chats } = chat;
+  const usersList = usersData?.data?.data ?? [];
+
+  useEffect(() => {
+    getUsers(undefined);
+  }, []);
+
+  const filteredChatList = useMemo(() => {
+    const directChatUserIds = chats
+      .filter((chat) => chat.type === CHAT_TYPE.DIRECT)
+      .map((chat) => chat.sender?.id);
+    const usersNotInChats = usersList.filter(
+      (user) => !directChatUserIds.includes(user.id)
+    );
+    return (
+      chatListSearch !== "" ? [...chats, ...usersNotInChats] : chats
+    ).filter((chat) =>
+      chat.name.toUpperCase().includes(chatListSearch.toUpperCase())
+    );
+  }, [chats, chatListSearch, usersList]);
 
   const handleAddNewChat = () => {
     setNewChatModalOpen(true);
@@ -33,17 +58,23 @@ const ChatList = () => {
         <input
           className="chat-list-search-input"
           placeholder="Search Contact"
-        ></input>
+          value={chatListSearch}
+          onChange={(e) => setChatListSearch(e.target.value)}
+        />
       </div>
       <div className="chat-list">
-        {chats.map((chat, index) => (
+        {filteredChatList.map((chat, index) => (
           <div className="chat-list-item" key={index}>
             <div className="chat-item-left">
-              <img src={""} className="chat-item-icon" />
-              <CgProfile className="chat-item-icon" />
-              <div className="user-name">
-                {chat.name}
-              </div>
+              {chat.img_url ? (
+                <img
+                  src={`${BASE_URL}${chat.img_url}`}
+                  className="chat-item-profile-img"
+                />
+              ) : (
+                <CgProfile className="chat-item-profile-icon" />
+              )}
+              <div className="user-name">{chat.name}</div>
             </div>
             {/* <div className="chat-item-right">
               <div>{chat.lastMsgStatus}</div>

@@ -3,8 +3,8 @@ from fastapi import HTTPException, status
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from apps.auth.models import UserModel
-    from apps.chat.models import ChatModel
+    from apps.auth.schemas import UserModel
+    from apps.chat.schemas import ChatModel
 
 ASGI_SCOPE = "asgi.scope"
 

@@ -43,4 +43,6 @@ PROFILE_IMAGE_UPLOAD_DIR = os.environ.get(
     "PROFILE_IMAGE_UPLOAD_DIR", "data/profile-images"
 )
 
+PROFILE_IMAGE_DIR_PATH = f"{BASE_DIR}/{PROFILE_IMAGE_UPLOAD_DIR}"
+
 PROFILE_IMAGE_FILE_TYPES = ["image/jpeg", "image/png"]

@@ -36,6 +36,7 @@
     border: 1px solid black;
     border-radius: 5px;
     cursor: pointer;
+
     .chat-list-search-input {
       border: none;
       background: none;
@@ -59,15 +60,25 @@
       align-items: center;
       padding: 10px;
       border-bottom: 1px solid black;
+
       .chat-item-left {
         display: flex;
         align-items: center;
         gap: 5px;
-        .chat-item-icon {
-          width: 30px;
-          height: 30px;
+
+        .chat-item-profile-img {
+          width: 34px;
+          height: 34px;
+          border-radius: 50px;
+        }
+
+        .chat-item-profile-icon {
+          width: 34px;
+          height: 34px;
+          color: rgb(100, 100, 100);
         }
       }
+
       .chat-item-right {
         display: flex;
         gap: 4px;

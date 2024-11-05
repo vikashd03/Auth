@@ -2,18 +2,19 @@ from datetime import timedelta
 import os
 from pathlib import Path
 import shutil
+from typing import Literal
 from fastapi import FastAPI, File, HTTPException, Request, Response, UploadFile, status
 from fastapi.responses import FileResponse
 
 from config import (
-    BASE_DIR,
+    PROFILE_IMAGE_DIR_PATH,
     PROFILE_IMAGE_FILE_TYPES,
-    PROFILE_IMAGE_UPLOAD_DIR,
     REFRESH_TOKEN_EXPIRY_TIME,
 )
 
 from .utils import (
     TOKEN_TYPE,
+    PROFILE_IMAGE_TYPES,
     create_token,
     hash_password,
     user_authenticated,
@@ -34,8 +35,7 @@ app = FastAPI()
 
 register_exception_handlers(app)
 
-profile_images_dir = f"{BASE_DIR}/{PROFILE_IMAGE_UPLOAD_DIR}/"
-os.makedirs(profile_images_dir, exist_ok=True)
+os.makedirs(PROFILE_IMAGE_DIR_PATH, exist_ok=True)
 
 
 @app.post("/signup", response_model=AuthResponse)
@@ -158,9 +158,12 @@ def get_users(response: Response):
     return {"data": users, "total": len(users)}
 
 
-@app.post("/profile-image")
+@app.post("/profile-image/{type}/{id}")
 def upload_profile_image(
-    request: AppRequest, response: Response, file: UploadFile = File(...)
+    response: Response,
+    type: Literal[*PROFILE_IMAGE_TYPES],  # type: ignore
+    id: int,
+    file: UploadFile = File(...),
 ):
     if file.content_type not in PROFILE_IMAGE_FILE_TYPES:
         raise HTTPException(
@@ -170,29 +173,15 @@ def upload_profile_image(
     file_extension = file.filename.split(".")[-1]
     if not file_extension:
         file_extension = file.content_type.removeprefix("image/")
-    file_name_search = f"{request.state.user.id}.*"
-    old_profile_files = list(Path(profile_images_dir).glob(file_name_search))
+    file_name_search = f"{id}.*"
+    files_dir_for_type = f"{PROFILE_IMAGE_DIR_PATH}/{str(type)}"
+    old_profile_files = list(Path(files_dir_for_type).glob(file_name_search))
     if len(old_profile_files) > 0:
         for file_path in old_profile_files:
             if os.path.isfile(file_path):
                 os.remove(file_path)
-    file_location = f"{profile_images_dir}{request.state.user.id}.{file_extension}"
+    file_location = f"{files_dir_for_type}/{id}.{file_extension}"
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     response.status_code = status.HTTP_200_OK
     return {"msg": "Uploaded Successfully"}
-
-
-@app.get("/profile-image")
-def get_profile_image(request: AppRequest, response: Response):
-    file_name_search = f"{request.state.user.id}.*"
-    found_files = list(Path(profile_images_dir).glob(file_name_search))
-    if len(found_files) > 0:
-        file_path = found_files[0]
-        if os.path.exists(file_path):
-            response.status_code = status.HTTP_200_OK
-            return FileResponse(file_path)
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Profile Image not found",
-    )

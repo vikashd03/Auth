@@ -25,3 +25,5 @@ export const NAV_ITEMS = [
     url: "/chat",
   },
 ];
+
+export const PROFILE_IMAGE_FILE_FORMATS = ["image/jpeg", "image/png"];

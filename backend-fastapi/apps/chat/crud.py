@@ -1,6 +1,7 @@
 from typing import List, Optional
 from sqlalchemy.orm import joinedload
 
+from apps.auth.utils import get_profile_image_url
 from internal.db import get_db
 
 from apps.auth.models import User
@@ -40,7 +41,7 @@ class ChatTable:
         self, user_id: int, offset: int = 0, limit: int = 15
     ) -> List[ChatModel]:
         with get_db() as db:
-            chats = (
+            chats: List[ChatModel] = (
                 db.query(Chat)
                 .join(chat_members)
                 .filter(chat_members.c.user_id == user_id)
@@ -55,6 +56,10 @@ class ChatTable:
                         None,
                     )
                     chat.name = member.name
+                    img_id = member.id
+                else: 
+                    img_id = chat.id
+                chat.img_url = get_profile_image_url(img_id, chat.type)
             return chats or []
 
 

@@ -1,14 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import { useGetUsersMutation } from "../../ducks/user/api";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useGetUsersMutation,
+  useUploadProfileImgMutation,
+} from "../../ducks/user/api";
 import Modal from "../Modal";
 import "./index.scss";
 import Loader from "../Loader";
 import { CgProfile } from "react-icons/cg";
 import { IoClose } from "react-icons/io5";
+import { IoCameraOutline } from "react-icons/io5";
+import { GoPencil } from "react-icons/go";
 import { User } from "../../types/common";
 import { useSelector } from "react-redux";
 import { RootState } from "../../ducks/store";
 import { useCreateNewChatMutation } from "../../ducks/chat/api";
+import { PROFILE_IMAGE_FILE_FORMATS } from "../../utils/config";
+import { BASE_URL } from "../../ducks/api/slice";
 
 const NewGrpChatModal = ({
   isOpen,
@@ -20,6 +27,7 @@ const NewGrpChatModal = ({
   const [chatName, setChatName] = useState<string>("");
   const [membersSearch, setMembersSearch] = useState<string>("");
   const [selectedMembers, setSelectedMembers] = useState<User[]>([]);
+  const [profileImgFile, setProfileImgFile] = useState<File | null>(null);
   const [errMsg, setErrMsg] = useState("");
   const { user: currentUser } = useSelector((state: RootState) => state.user);
   const [getUsers, { data: usersData, isLoading: usersIsLoading }] =
@@ -27,9 +35,20 @@ const NewGrpChatModal = ({
   const userList = usersData?.data?.data ?? [];
   const [createUser, { data: newChatData, isLoading: newChatLoading }] =
     useCreateNewChatMutation();
+  const [
+    uploadProfileImg,
+    { data: profileImgUploadData, isLoading: profileImgUploadLoading },
+  ] = useUploadProfileImgMutation();
+  const profileImgInputRef = useRef<HTMLInputElement | null>(null);
+  const profileImgPreviewUrl = profileImgFile
+    ? URL.createObjectURL(profileImgFile)
+    : "";
 
   useEffect(() => {
     getUsers(undefined);
+    return () => {
+      profileImgPreviewUrl && URL.revokeObjectURL(profileImgPreviewUrl);
+    };
   }, []);
 
   const membersList = useMemo(
@@ -83,14 +102,28 @@ const NewGrpChatModal = ({
         type: "group",
         members: [...selectedMembers.map((member) => member.email)],
       }).unwrap();
-      if (res?.meta?.response?.status === 200) {
-        onClose();
-      } else {
-        throw res?.data;
+      if (res?.data?.chat?.id && profileImgFile) {
+        await uploadProfileImg({
+          file: profileImgFile,
+          type: "group",
+          id: res?.data?.chat?.id,
+        }).unwrap();
       }
+      onClose();
     } catch (err: any) {
-      console.log(err);
+      console.log("new group creation error -", err);
       setErrMsg(err.data.error);
+    }
+  };
+
+  const handleProfileImageChange = (e: any) => {
+    const files: File[] = Array.from(e?.target?.files ?? []);
+    if (
+      Array.isArray(files) &&
+      files.length === 1 &&
+      PROFILE_IMAGE_FILE_FORMATS.includes(files[0].type)
+    ) {
+      setProfileImgFile(files[0]);
     }
   };
 
@@ -110,15 +143,49 @@ const NewGrpChatModal = ({
           <IoClose className="new-grp-chat-modal-close-btn" onClick={onClose} />
         </div>
         <div className="new-grp-chat-modal-content">
-          <input
-            className="chat-name-input"
-            placeholder="Enter Chat Name"
-            value={chatName}
-            onChange={(e) => {
-              setErrMsg("");
-              setChatName(e.target.value);
-            }}
-          />
+          <div className="chat-profile-input-wrapper">
+            <div className="chat-profile-img-wrapper">
+              {!profileImgFile ? (
+                <IoCameraOutline
+                  className="chat-profile-img-placeholder"
+                  onClick={() =>
+                    profileImgInputRef.current !== null &&
+                    profileImgInputRef.current.click()
+                  }
+                />
+              ) : (
+                <div
+                  className="chat-profile-selected-img-wrapper"
+                  onClick={() =>
+                    profileImgInputRef.current !== null &&
+                    profileImgInputRef.current.click()
+                  }
+                >
+                  <img
+                    src={profileImgPreviewUrl}
+                    className="chat-profile-selected-img"
+                  />
+                  <GoPencil className="chat-profile-selected-img-edit" />
+                </div>
+              )}
+              <input
+                type="file"
+                className="chat-profile-img-input"
+                ref={profileImgInputRef}
+                accept={PROFILE_IMAGE_FILE_FORMATS.join(", ")}
+                onChange={handleProfileImageChange}
+              />
+            </div>
+            <input
+              className="chat-name-input"
+              placeholder="Enter Chat Name"
+              value={chatName}
+              onChange={(e) => {
+                setErrMsg("");
+                setChatName(e.target.value);
+              }}
+            />
+          </div>
           <div className="add-members-wrapper">
             <input
               className="add-members-search"
@@ -144,7 +211,14 @@ const NewGrpChatModal = ({
                       className="member-list-item"
                       onClick={() => handleMemberListClick(user)}
                     >
-                      <CgProfile className="member-profile-icon" />
+                      {user.img_url ? (
+                        <img
+                          src={`${BASE_URL}${user.img_url}`}
+                          className="member-profile-img"
+                        />
+                      ) : (
+                        <CgProfile className="member-profile-icon" />
+                      )}
                       <div className="member-profile-content">
                         <div className="member-name">{user.name}</div>
                         <div className="member-email">Email: {user.email}</div>
@@ -153,6 +227,7 @@ const NewGrpChatModal = ({
                         className="member-list-checkbox"
                         type="checkbox"
                         checked={user.selected}
+                        onChange={() => null}
                       />
                     </div>
                   ))
@@ -166,7 +241,7 @@ const NewGrpChatModal = ({
         <div className="create-new-grp-chat-wrapper">
           <div className="create-new-grp-chat-error">{errMsg}</div>
           <div className="create-new-grp-chat-btn-laoding">
-            {newChatLoading ? (
+            {newChatLoading || profileImgUploadLoading ? (
               <Loader />
             ) : (
               <button

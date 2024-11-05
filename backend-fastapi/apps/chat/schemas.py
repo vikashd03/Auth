@@ -21,6 +21,7 @@ class ChatModel(BaseModel):
     name: Optional[str] = None
     messages: List[MessageModel]
     members: List[UserModel]
+    img_url: Optional[str] = None
 
 
 class ChatResponse(BaseModel):

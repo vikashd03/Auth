@@ -1,15 +1,21 @@
 import datetime
+import os
+from pathlib import Path
 from typing import Optional
 from fastapi import HTTPException, WebSocketException, status
 import jwt
 from passlib.context import CryptContext
 from enum import Enum
 
+from apps.chat.utils import ChatType
+
 from .schemas import AccessTokenPayload, RefreshTokenPayload, UserModel
 from .crud import Users
 from config import (
     ACCESS_TOKEN_EXPIRY_TIME,
     ACCESS_TOKEN_SECRET_KEY,
+    BASE_DIR,
+    PROFILE_IMAGE_DIR_PATH,
     REFRESH_TOKEN_SECRET_KEY,
     REFRESH_TOKEN_EXPIRY_TIME,
     JWT_ALGORITHM,
@@ -30,6 +36,9 @@ class TOKEN_TYPE(str, Enum):
 class REQUEST_TYPE(str, Enum):
     HTTP = "http"
     WEBSOCKET = "websocket"
+
+
+PROFILE_IMAGE_TYPES = ["user", "group"]
 
 
 def create_token(data: dict, token_type: TOKEN_TYPE):
@@ -113,3 +122,17 @@ def user_authenticated(
     if not user or expiryAt < current_utc_time:
         raise_not_authenticated(request_type)
     return user
+
+
+def get_profile_image_url(id: int, type: ChatType) -> str | None:
+    file_name_search = f"{id}.*"
+    found_files = list(
+        Path(
+            f"{PROFILE_IMAGE_DIR_PATH}/{'user' if type == ChatType.DIRECT else 'group'}"
+        ).glob(file_name_search)
+    )
+    if len(found_files) > 0:
+        file_path = found_files[0]
+        if os.path.isfile(file_path):
+            return str(file_path).replace(f"{BASE_DIR}/", "")
+    return None

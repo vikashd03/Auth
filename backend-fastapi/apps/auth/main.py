@@ -16,6 +16,7 @@ from .utils import (
     TOKEN_TYPE,
     PROFILE_IMAGE_TYPES,
     create_token,
+    get_profile_image_url,
     hash_password,
     user_authenticated,
     verify_password,
@@ -26,6 +27,7 @@ from .schemas import (
     RefreshTokenResponse,
     SiginInFormData,
     SiginUpFormData,
+    UpdateUserNameFormData,
     UserResponse,
     UsersResponse,
 )
@@ -142,6 +144,7 @@ def logout(response: Response):
 @app.get("/user", response_model=UserResponse)
 def get_user(request: AppRequest, response: Response):
     user = request.state.user
+    user.img_url = get_profile_image_url(user.id, "direct")
     if user:
         response.status_code = status.HTTP_200_OK
         return user
@@ -155,6 +158,8 @@ def get_user(request: AppRequest, response: Response):
 def get_users(response: Response):
     response.status_code = status.HTTP_200_OK
     users = Users.get_all_users()
+    for user in users:
+        user.img_url = get_profile_image_url(user.id, "direct")
     return {"data": users, "total": len(users)}
 
 
@@ -185,3 +190,12 @@ def upload_profile_image(
         shutil.copyfileobj(file.file, buffer)
     response.status_code = status.HTTP_200_OK
     return {"msg": "Uploaded Successfully"}
+
+
+@app.put("/username")
+def update_name(
+    request: AppRequest, form_data: UpdateUserNameFormData, response: Response
+):
+    user = Users.update_name(request.state.user.id, form_data.name)
+    response.status_code = status.HTTP_200_OK
+    return {"data": user}

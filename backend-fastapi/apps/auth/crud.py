@@ -33,13 +33,24 @@ class UserTable:
             else:
                 return None
 
-    def get_all_users(self) -> List[UserModel]:
+    def get_all_users(self) -> Optional[List[UserModel]]:
         with get_db() as db:
             users = db.query(User).all()
             if users:
                 return users
             else:
                 return []
+
+    def update_name(self, id, name) -> UserModel:
+        with get_db() as db:
+            user = db.query(User).filter(User.id == id).first()
+            user.name = name
+            db.commit()
+            db.refresh(user)
+            if user:
+                return UserModel.model_validate(user)
+            else:
+                return None
 
 
 Users = UserTable()

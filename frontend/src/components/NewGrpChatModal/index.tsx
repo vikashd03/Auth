@@ -33,7 +33,7 @@ const NewGrpChatModal = ({
   const [getUsers, { data: usersData, isLoading: usersIsLoading }] =
     useGetUsersMutation();
   const userList = usersData?.data?.data ?? [];
-  const [createUser, { data: newChatData, isLoading: newChatLoading }] =
+  const [createNewChat, { data: newChatData, isLoading: newChatLoading }] =
     useCreateNewChatMutation();
   const [
     uploadProfileImg,
@@ -97,7 +97,7 @@ const NewGrpChatModal = ({
       return;
     }
     try {
-      const res = await createUser({
+      const res = await createNewChat({
         name: chatName,
         type: "group",
         members: [...selectedMembers.map((member) => member.email)],

@@ -72,6 +72,14 @@ export const userApi = apiSlice.injectEndpoints({
         };
       },
     }),
+    updateUserName: builder.mutation({
+      query: (data) => ({
+        url: AUTH_BASE + "/username",
+        method: "PUT",
+        body: data,
+      }),
+      transformResponse: commonTransformResponse,
+    }),
   }),
 });
 
@@ -83,4 +91,5 @@ export const {
   useGetUsersMutation,
   useGetUserMutation,
   useUploadProfileImgMutation,
+  useUpdateUserNameMutation,
 } = userApi;

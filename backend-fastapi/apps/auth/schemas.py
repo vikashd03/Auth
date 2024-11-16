@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from typing import List
+from typing import List, Optional
 
 
 class UserModel(BaseModel):
@@ -10,6 +10,7 @@ class UserModel(BaseModel):
     email: str
     password: str
     active: bool
+    img_url: Optional[str] = None
 
 
 class SiginUpFormData(BaseModel):
@@ -35,6 +36,7 @@ class UserResponse(BaseModel):
     name: str
     email: str
     active: bool
+    img_url: Optional[str] = None
 
 
 class UsersResponse(BaseModel):
@@ -55,3 +57,7 @@ class RefreshTokenPayload(BaseModel):
     user_id: str
     email: str
     expiryAt: int
+
+
+class UpdateUserNameFormData(BaseModel):
+    name: str

@@ -11,10 +11,12 @@ import { useEffect, useRef, useState } from "react";
 import { FaPencil } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
+import EditProfileModal from "../EditProfileModal";
 
 const Nav = () => {
   const navigate = useNavigateWithState();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
   const [, { isLoading: userLoading }] = useGetUserMutation({
     fixedCacheKey: cacheKey.FETCH_USER_DATA,
@@ -43,6 +45,12 @@ const Nav = () => {
 
   return (
     <div className="nav-wrapper">
+      {!userLoading && (
+        <EditProfileModal
+          isOpen={!userLoading && editProfileOpen}
+          onClose={() => setEditProfileOpen(false)}
+        />
+      )}
       <div className="nav-title">Sample App</div>
       <div className="nav-items">
         <div className="nav-links">
@@ -72,7 +80,10 @@ const Nav = () => {
               </button>
               {profileDropdownOpen && (
                 <div className="profile-dropdown" ref={profileDropdownRef}>
-                  <div className="profile-dropdown-item">
+                  <div
+                    className="profile-dropdown-item"
+                    onClick={() => setEditProfileOpen(true)}
+                  >
                     <FaPencil />
                     <button>Profle</button>
                   </div>

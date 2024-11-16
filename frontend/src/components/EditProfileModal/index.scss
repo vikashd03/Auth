@@ -1,0 +1,123 @@
+.edit-profile-modal-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .edit-profile-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .edit-profile-modal-title {
+      font-size: 20px;
+      margin: 0 auto;
+    }
+
+    .edit-profile-modal-close-btn {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .edit-profile-modal-content {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+
+    .edit-profile-input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      .edit-profile-img-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .edit-profile-img-placeholder {
+          width: 34px;
+          height: 34px;
+          cursor: pointer;
+          color: rgb(57, 57, 57);
+        }
+
+        .edit-profile-selected-img-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          cursor: pointer;
+
+          .edit-profile-selected-img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50px;
+          }
+
+          .edit-profile-selected-img-edit {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            color: rgb(55, 55, 55);
+          }
+        }
+
+        .edit-profile-img-input {
+          display: none;
+        }
+      }
+
+      .user-name-input {
+        border: 1px solid black;
+        outline: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        width: 250px;
+      }
+    }
+
+    .reset-password-btn {
+      color: blue;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+  }
+
+  .create-edit-profile-wrapper {
+    margin-left: auto;
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .create-edit-profile-error {
+      height: 20px;
+      font-size: 14px;
+      color: rgb(216, 4, 4);
+    }
+
+    .create-edit-profile-btn-laoding {
+      width: 110px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .create-edit-profile-btn {
+        border: 1px solid blue;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
